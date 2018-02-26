@@ -1,0 +1,6 @@
+{
+    "QueueURL" : "https://sqs.ap-northeast-1.amazonaws.com/42133769/my-queue",
+    "Region" : "ap-northeast-1",
+    "AccessKeyID" : "4213376942133769",
+    "SecretAccessKey" : "42133769421337694213376942133769"
+}
