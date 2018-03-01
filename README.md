@@ -3,8 +3,8 @@ Zabbix-SQS alertscript
 
 Forward Zabbix alerts to SQS queue by using a custom Zabbix [alertscript](https://www.zabbix.com/documentation/3.4/manual/config/notifications/media/script).
 
-Installation
-------------
+Script installation
+-------------------
 
 Build `zabbix-sqs.go` :
 
@@ -24,8 +24,8 @@ directory which can be found in the `/etc/zabbix/zabbix_server.conf` configurati
 
 Be sure zabbix user is able to execute `zabbix-sqs` file
 
-Webui configuration
--------------------
+Zabbix configuration
+--------------------
 
 To forward Zabbix events to SQS a new media script needs to be created
 and associated with a user. Follow the steps below as a Zabbix Admin user...
@@ -102,8 +102,8 @@ Send to Users: Admin (or previously created user)
 Send only to: zabbix-sqs
 ```
 
-Server configuration
-----------------------
+Script configuration
+--------------------
 
 The configuration file `zabbix-sqs.json` should be located next to the script in alertscripts directory
 
@@ -119,6 +119,49 @@ The following parameters should be configured :
 in `zabbix-sqs.json` file next to the binaray `zabbix-sqs`
 
 Here is a [sample configuration file](zabbix-sqs.json.sample)
+
+AWS configuration
+-----------------
+
+The following resources should be created :
+
+  * IAM user
+  * IAM policy
+  * SQS Queue
+
+First, create the queue and configure it according your needs. Get the SQS `QueueURL` and its `Region` to set it in the configuration file.
+
+Then, create an IAM user for zabbix and generate credentials. Get `AccessKeyID` and `SecretAccessKey` to set it in the configuration file.
+
+Finally, add an inline IAM policy to the previously created user to grant it SQS privileges. Taking example from [the sample configuration file](zabbix-sqs.json.sample) :
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "sqs:ListQueues",
+            "Resource": "*",
+            "Condition": {
+                "IpAddress": {
+                    "aws:SourceIp": "#ZABBIX_SERVER_IP#"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Action": "sqs:*",
+            "Resource": "https://sqs.ap-northeast-1.amazonaws.com/42133769/my-queue",
+            "Condition": {
+                "IpAddress": {
+                    "aws:SourceIp": "#ZABBIX_SERVER_IP#"
+                }
+            }
+        }
+    ]
+}
+```
 
 Troubleshooting
 ---------------
