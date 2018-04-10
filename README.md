@@ -6,15 +6,11 @@ Forward Zabbix alerts to SQS queue by using a custom Zabbix [alertscript](https:
 Script installation
 -------------------
 
-Build `zabbix-sqs.go` :
-
-    $ cd go/src/zabbix-sqs && go get && go build
-
-Or, simply decompress binary from `zabbix-sqs.bz2`:
+Simply decompress archive found in [releases section](https://github.com/claranet/zabbix-sqs/releases):
 
     $ bunzip2 `zabbix-sqs.bz2`
 
-Then mv `zabbix-sqs` script and its json config file on zabbix server to the `AlertScriptsPath`
+Then mv `zabbix-sqs` bonary and its json config file on zabbix server to the `AlertScriptsPath`
 directory which can be found in the `/etc/zabbix/zabbix_server.conf` configuration file:
 
     $ grep -e '^AlertScriptsPath' /etc/zabbix/zabbix_server.conf
